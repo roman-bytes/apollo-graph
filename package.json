@@ -1,0 +1,23 @@
+{
+  "name": "apollo-graph",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start-gateway": "nodemon gateway.js",
+    "start-service-accounts": "nodemon services/users/index.js",
+    "start-service-products": "nodemon services/products/index.js",
+    "start-services": "concurrently \"npm:start-service-*\"",
+    "postinstall": "lerna bootstrap"
+  },
+  "dependencies": {
+    "@apollo/gateway": "^0.12.1",
+    "apollo-server": "^2.10.1",
+    "graphql": "^14.6.0"
+  },
+  "devDependencies": {
+    "concurrently": "^5.1.0",
+    "lerna": "^3.20.2",
+    "nodemon": "^2.0.2"
+  }
+}

@@ -1,0 +1,59 @@
+const { ApolloServer, gql } = require("apollo-server");
+const { buildFederatedSchema } = require("@apollo/federation");
+
+const typeDefs = gql`
+  extend type Query {
+    me: User!
+    users: [User]!
+  }
+
+  type User @key(fields: "id") {
+    id: ID!
+    name: String
+    username: String
+  }
+`;
+
+const resolvers = {
+  Query: {
+    me() {
+      return users[0];
+    },
+    users() {
+      return users;
+    }
+  },
+  User: {
+    __resolveReference(object) {
+      return users.find(user => user.id === object.id);
+    }
+  }
+};
+
+const server = new ApolloServer({
+  schema: buildFederatedSchema([
+    {
+      typeDefs,
+      resolvers
+    }
+  ])
+});
+
+server.listen({ port: 8001 }).then(({ url }) => {
+  console.log(`🚀 Server ready at ${url}`);
+});
+
+const users = [
+  {
+    id: "1",
+    name: "Bob Ross",
+    birthDate: "1815-12-10",
+    username: "@bross"
+  },
+  {
+    id: "2",
+    name: "Alex Trebek",
+    birthDate: "1912-06-23",
+    username: "@atrebek"
+  }
+];
